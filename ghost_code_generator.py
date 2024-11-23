@@ -147,16 +147,18 @@ def main():
     # Initialize the generator
     generator = GhostCodeGenerator()
 
-    # Load thinking processes and system prompts
+    # Get base directory
     base_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # Load thinking processes
-    generator.load_thinking_process(os.path.join(base_dir, "thinking-feature24"))
-    generator.load_thinking_process(os.path.join(base_dir, "thinking-feature25"))
+    # Load thinking processes from thinking directory
+    thinking_dir = os.path.join(base_dir, "thinking")
+    for file in os.listdir(thinking_dir):
+        generator.load_thinking_process(os.path.join(thinking_dir, file))
 
-    # Load system prompts
-    generator.load_system_prompt(os.path.join(base_dir, "v0-system-prompt"))
-    generator.load_system_prompt(os.path.join(base_dir, "v0-system-prompt(updated)"))
+    # Load system prompts from prompts directory
+    prompts_dir = os.path.join(base_dir, "prompts")
+    for file in os.listdir(prompts_dir):
+        generator.load_system_prompt(os.path.join(prompts_dir, file))
 
     # Example requirements for a form component
     requirements = {
@@ -193,7 +195,7 @@ def main():
 
     # Save generated code
     if generated_code:
-        output_path = os.path.join("generated", "login-form.tsx")
+        output_path = os.path.join(base_dir, "generated", "login-form.tsx")
         generator.save_generated_code(generated_code, output_path)
 
 if __name__ == "__main__":
