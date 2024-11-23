@@ -1,0 +1,157 @@
+{
+    "react": {
+        "hooks": {
+            "useState": {
+                "pattern": "const [state, setState] = useState(initialValue)",
+                "description": "State management hook",
+                "best_practices": [
+                    "Use meaningful state names",
+                    "Keep state minimal",
+                    "Use functional updates for dependent state"
+                ]
+            },
+            "useEffect": {
+                "pattern": "useEffect(() => { /* effect */ }, [dependencies])",
+                "description": "Side effects hook",
+                "best_practices": [
+                    "Always specify dependencies",
+                    "Clean up side effects",
+                    "Avoid infinite loops"
+                ]
+            },
+            "useContext": {
+                "pattern": "const value = useContext(Context)",
+                "description": "Context consumer hook",
+                "best_practices": [
+                    "Create custom hooks for complex contexts",
+                    "Keep context values minimal",
+                    "Use memo for expensive computations"
+                ]
+            }
+        },
+        "components": {
+            "functional": {
+                "pattern": "const Component = ({ props }) => { return jsx }",
+                "description": "Functional component",
+                "best_practices": [
+                    "Use TypeScript for props",
+                    "Keep components focused",
+                    "Implement proper prop validation"
+                ]
+            },
+            "hoc": {
+                "pattern": "const withHOC = (WrappedComponent) => { return EnhancedComponent }",
+                "description": "Higher-order component",
+                "best_practices": [
+                    "Use composition over inheritance",
+                    "Forward refs",
+                    "Preserve component name"
+                ]
+            }
+        },
+        "patterns": {
+            "render_props": {
+                "pattern": "<Component>{(value) => jsx}</Component>",
+                "description": "Render props pattern",
+                "best_practices": [
+                    "Use TypeScript for prop types",
+                    "Keep render logic simple",
+                    "Consider hooks alternative"
+                ]
+            },
+            "compound": {
+                "pattern": "Component.SubComponent = SubComponent",
+                "description": "Compound components",
+                "best_practices": [
+                    "Use Context for state sharing",
+                    "Keep API consistent",
+                    "Document component relationships"
+                ]
+            }
+        }
+    },
+    "typescript": {
+        "types": {
+            "interface": {
+                "pattern": "interface Name { prop: type }",
+                "description": "Type definition",
+                "best_practices": [
+                    "Use descriptive names",
+                    "Keep interfaces focused",
+                    "Use readonly when appropriate"
+                ]
+            },
+            "generics": {
+                "pattern": "function func<T>(arg: T): T",
+                "description": "Generic types",
+                "best_practices": [
+                    "Use constraints when needed",
+                    "Keep type parameters meaningful",
+                    "Document type parameters"
+                ]
+            }
+        },
+        "utilities": {
+            "pick": {
+                "pattern": "Pick<Type, Keys>",
+                "description": "Pick utility type",
+                "best_practices": [
+                    "Use for prop subset types",
+                    "Combine with other utilities",
+                    "Document selected properties"
+                ]
+            },
+            "partial": {
+                "pattern": "Partial<Type>",
+                "description": "Partial utility type",
+                "best_practices": [
+                    "Use for optional updates",
+                    "Consider deep partial",
+                    "Document optional nature"
+                ]
+            }
+        }
+    },
+    "tailwind": {
+        "layout": {
+            "flex": {
+                "pattern": "flex flex-col space-y-4",
+                "description": "Flexbox layout",
+                "best_practices": [
+                    "Use semantic class order",
+                    "Consider responsive variants",
+                    "Use spacing utilities"
+                ]
+            },
+            "grid": {
+                "pattern": "grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
+                "description": "Grid layout",
+                "best_practices": [
+                    "Use auto-fit for responsive grids",
+                    "Consider gap utilities",
+                    "Use min-width constraints"
+                ]
+            }
+        },
+        "components": {
+            "card": {
+                "pattern": "rounded-lg shadow-md hover:shadow-lg transition-shadow",
+                "description": "Card component",
+                "best_practices": [
+                    "Use consistent padding",
+                    "Include hover states",
+                    "Consider dark mode"
+                ]
+            },
+            "button": {
+                "pattern": "px-4 py-2 rounded-md bg-primary text-white hover:bg-primary-dark",
+                "description": "Button component",
+                "best_practices": [
+                    "Use semantic colors",
+                    "Include focus states",
+                    "Consider loading states"
+                ]
+            }
+        }
+    }
+}

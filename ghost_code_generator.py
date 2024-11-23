@@ -3,6 +3,8 @@ import os
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 import logging
+from pathlib import Path
+from ai_engine import AIEngine, AIContext
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -24,10 +26,20 @@ class CodeTemplate:
 
 class GhostCodeGenerator:
     def __init__(self):
+        self.ai_engine = AIEngine()
+        self.config = self._load_config()
         self.thinking_processes = {}
         self.code_templates = {}
         self.system_prompts = {}
         
+    def _load_config(self) -> Dict:
+        try:
+            with open("config.json", 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            logger.error(f"Error loading config: {str(e)}")
+            return {}
+
     def load_thinking_process(self, file_path: str) -> None:
         """Load thinking process from file."""
         try:
@@ -62,35 +74,69 @@ class GhostCodeGenerator:
             output_format={"type": "text"}
         )
 
-    def generate_code(self, thinking_process: str, system_prompt: str, 
-                     requirements: Dict[str, str]) -> str:
-        """Generate code based on thinking process and system prompt."""
+    def generate_component(self, 
+                         name: str,
+                         requirements: Dict[str, any]) -> str:
+        """Generate a component using AI engine"""
         try:
-            process = self.thinking_processes.get(thinking_process)
-            prompt = self.system_prompts.get(system_prompt)
+            # Create AI context
+            context = AIContext(
+                language=requirements.get("language", "typescript"),
+                framework=requirements.get("framework", "next.js"),
+                patterns=self._get_relevant_patterns(requirements),
+                requirements=requirements,
+                history=[]
+            )
             
-            if not process or not prompt:
-                raise ValueError("Thinking process or system prompt not found")
-
-            # Apply thinking process
-            logger.info("Applying thinking process...")
-            for step in process.steps:
-                logger.info(f"Executing step: {step}")
-                # Add step execution logic here
-
-            # Generate code using system prompt
-            logger.info("Generating code...")
-            # Add code generation logic here
+            # Generate code using AI engine
+            code = self.ai_engine.generate_code(context)
             
-            return "Generated code placeholder"
-
+            # Get suggestions for improvements
+            suggestions = self.ai_engine.suggest_improvements(code)
+            
+            # Log suggestions
+            if suggestions:
+                logger.info("Suggestions for improvement:")
+                for suggestion in suggestions:
+                    logger.info(f"- {suggestion}")
+            
+            return code
+            
         except Exception as e:
-            logger.error(f"Error in code generation: {str(e)}")
-            return ""
+            logger.error(f"Error generating component: {str(e)}")
+            return None
+
+    def _get_relevant_patterns(self, requirements: Dict[str, any]) -> List[str]:
+        """Get relevant patterns based on requirements"""
+        patterns = []
+        
+        # Add patterns based on component type
+        if requirements.get("type") == "form":
+            patterns.extend([
+                "react.hooks.useState",
+                "react.hooks.useEffect",
+                "typescript.types.interface"
+            ])
+        
+        # Add patterns based on features
+        features = requirements.get("features", [])
+        if "responsive" in features:
+            patterns.extend([
+                "tailwind.layout.grid",
+                "tailwind.layout.flex"
+            ])
+        
+        if "dark-mode" in features:
+            patterns.append("tailwind.components.card")
+        
+        return patterns
 
     def save_generated_code(self, code: str, output_path: str) -> None:
-        """Save generated code to file."""
+        """Save generated code to file"""
         try:
+            # Create output directory if it doesn't exist
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            
             with open(output_path, 'w') as f:
                 f.write(code)
             logger.info(f"Saved generated code to: {output_path}")
@@ -112,27 +158,43 @@ def main():
     generator.load_system_prompt(os.path.join(base_dir, "v0-system-prompt"))
     generator.load_system_prompt(os.path.join(base_dir, "v0-system-prompt(updated)"))
 
-    # Example requirements
+    # Example requirements for a form component
     requirements = {
         "language": "typescript",
         "framework": "next.js",
-        "component_type": "ui",
-        "features": ["responsive", "accessible", "dark-mode"]
+        "type": "form",
+        "features": [
+            "responsive",
+            "accessible",
+            "dark-mode",
+            "validation"
+        ],
+        "fields": [
+            {
+                "name": "email",
+                "type": "email",
+                "required": True,
+                "validation": "email"
+            },
+            {
+                "name": "password",
+                "type": "password",
+                "required": True,
+                "validation": "min:8"
+            }
+        ]
     }
 
-    # Generate code
-    generated_code = generator.generate_code(
-        thinking_process="thinking-feature24",
-        system_prompt="v0-system-prompt(updated)",
+    # Generate the component
+    generated_code = generator.generate_component(
+        name="LoginForm",
         requirements=requirements
     )
 
     # Save generated code
     if generated_code:
-        generator.save_generated_code(
-            generated_code,
-            os.path.join(base_dir, "generated", "feature24.tsx")
-        )
+        output_path = os.path.join("generated", "login-form.tsx")
+        generator.save_generated_code(generated_code, output_path)
 
 if __name__ == "__main__":
     main()
