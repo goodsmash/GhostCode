@@ -1,0 +1,49 @@
+import * as React from "react"
+import { cn } from "@/lib/utils"
+import { cva, type VariantProps } from "class-variance-authority"
+
+// Component variants definition
+const {{componentName}}Variants = cva(
+    "relative w-full",
+    {
+        variants: {
+            variant: {
+                default: "",
+                outline: "border border-input bg-background",
+                ghost: "hover:bg-accent hover:text-accent-foreground"
+            },
+            size: {
+                default: "h-10",
+                sm: "h-8",
+                lg: "h-12"
+            }
+        },
+        defaultVariants: {
+            variant: "default",
+            size: "default"
+        }
+    }
+)
+
+// Component props interface
+export interface {{componentName}}Props
+    extends React.HTMLAttributes<HTMLDivElement>,
+        VariantProps<typeof {{componentName}}Variants> {
+    asChild?: boolean
+}
+
+// Component implementation
+const {{componentName}} = React.forwardRef<HTMLDivElement, {{componentName}}Props>(
+    ({ className, variant, size, ...props }, ref) => {
+        return (
+            <div
+                ref={ref}
+                className={cn({{componentName}}Variants({ variant, size }), className)}
+                {...props}
+            />
+        )
+    }
+)
+{{componentName}}.displayName = "{{componentName}}"
+
+export { {{componentName}}, {{componentName}}Variants }

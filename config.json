@@ -1,0 +1,30 @@
+{
+    "version": "1.0.0",
+    "settings": {
+        "default_language": "typescript",
+        "default_framework": "next.js",
+        "use_shadcn": true,
+        "enable_dark_mode": true
+    },
+    "thinking_processes": {
+        "base_dir": "./thinking",
+        "enabled": ["feature24", "feature25"]
+    },
+    "system_prompts": {
+        "base_dir": "./prompts",
+        "default": "system-prompt-updated"
+    },
+    "code_generation": {
+        "output_dir": "./generated",
+        "templates_dir": "./templates",
+        "default_features": [
+            "responsive",
+            "accessible",
+            "dark-mode"
+        ]
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "ghost_code.log"
+    }
+}
